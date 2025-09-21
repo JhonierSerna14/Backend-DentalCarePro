@@ -1,11 +1,9 @@
 package com.example.demo.controller;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +19,7 @@ import com.example.demo.repository.CitaOdontologicaRepository;
 import com.example.demo.repository.ConsultorioRepository;
 import com.example.demo.repository.OdontologoRepository;
 
-@Controller
+@RestController
 @RequestMapping(path = "/odontologo")
 public class OdontologoController {
 
@@ -61,13 +59,6 @@ public class OdontologoController {
 		} else {
 			return "Id's proporcionados invalidos";
 		}
-	}
-
-	@GetMapping(path = "/*")
-	public String listarTodos_frontend(Model modelo) {
-		ArrayList<Odontologo> lista = (ArrayList<Odontologo>) odontologoRepository.findAll();
-		modelo.addAttribute("odontologos", lista);
-		return "index";
 	}
 
 	@GetMapping(path = "/all")
