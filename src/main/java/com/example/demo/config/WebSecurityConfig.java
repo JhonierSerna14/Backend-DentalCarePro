@@ -37,7 +37,10 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/", "/home", "/api/login", "/api/pregunta-seguridad",
                                 "/api/verificarRespuestaSeguridad", "/static/**",
-                                "/assets/**", "/index.html")
+                                "/assets/**", "/index.html",
+                                // OpenAPI/Swagger endpoints
+                                "/docs/**", "/swagger-ui/**", "/api-docs/**",
+                                "/swagger-ui.html", "/v3/api-docs/**")
                         .permitAll()
                         // .requestMatchers("/admin", "paciente/all").hasRole("ADMIN")
                         .requestMatchers("/admin").hasRole("ADMIN")
