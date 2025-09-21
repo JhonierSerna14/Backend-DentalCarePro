@@ -1,27 +1,19 @@
 package com.example.demo.entity;
 
-import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 @Entity
 public class Odontograma {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "paciente_id")
     @JsonBackReference
     private Paciente paciente;
@@ -61,12 +53,14 @@ public class Odontograma {
         }
     }
 
-    public static boolean esMayorDeEdad(Date fechaNacimiento) {
-        long fechaActualMilisegundos = System.currentTimeMillis();
-        long edadMilisegundos = fechaActualMilisegundos - fechaNacimiento.getTime();
-        long edadAproximada = edadMilisegundos / (1000L * 60 * 60 * 24 * 365);
-        System.out.println(edadAproximada);
-        return edadAproximada >= 18;
+    public static boolean esMayorDeEdad(LocalDate fechaNacimiento) {
+        if (fechaNacimiento == null) {
+            return true; // Por defecto asumimos adulto si no hay fecha
+        }
+        Period period = Period.between(fechaNacimiento, LocalDate.now());
+        int edad = period.getYears();
+        System.out.println("Edad calculada: " + edad);
+        return edad >= 18;
     }
 
     public List<Diente> getDientes() {

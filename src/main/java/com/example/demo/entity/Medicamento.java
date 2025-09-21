@@ -16,7 +16,7 @@ import jakarta.persistence.OneToMany;
 public class Medicamento {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	private Long id;
 	private String nombre;
 	private String presentacion;
 
@@ -33,11 +33,11 @@ public class Medicamento {
 		this.medicamentosxTratamientos = medicamentosxTratamientos;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

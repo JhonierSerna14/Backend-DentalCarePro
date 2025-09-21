@@ -12,8 +12,8 @@ import jakarta.persistence.ManyToOne;
 @Entity
 public class MedicamentoxTratamiento {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "medicamento_id")
@@ -52,11 +52,11 @@ public class MedicamentoxTratamiento {
 		this.tratamiento = tratamiento;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

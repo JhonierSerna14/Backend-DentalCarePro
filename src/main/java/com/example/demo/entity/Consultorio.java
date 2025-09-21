@@ -1,24 +1,18 @@
 package com.example.demo.entity;
 
-import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 @Entity
 public class Consultorio {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	private String sede, consultorio;
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -61,15 +55,15 @@ public class Consultorio {
 		this.consultorio = consultorio;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public boolean isHorarioDisponible(Date fecha, String hora) {
+	public boolean isHorarioDisponible(LocalDate fecha, LocalTime hora) {
 		boolean disponibilidad = true;
 		for (HorarioDisponible h : this.horariosDisponibles) {
 			if (h.getFecha().equals(fecha) && h.getHora().equals(hora)) {
@@ -85,7 +79,7 @@ public class Consultorio {
 		return disponibilidad;
 	}
 
-	public void volverDisponible(Date fecha, String hora) {
+	public void volverDisponible(LocalDate fecha, LocalTime hora) {
 		for (HorarioDisponible h : this.horariosDisponibles) {
 			if (h.getFecha().equals(fecha) && h.getHora().equals(hora)) {
 				this.horariosDisponibles.remove(h);

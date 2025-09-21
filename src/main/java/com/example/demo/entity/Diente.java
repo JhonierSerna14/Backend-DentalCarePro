@@ -12,8 +12,8 @@ import jakarta.persistence.ManyToOne;
 @Entity
 public class Diente {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private int sector;
     private int numero;
     private String estado;
@@ -24,11 +24,11 @@ public class Diente {
     @JsonBackReference
     private Odontograma odontograma;
 
-    public int getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

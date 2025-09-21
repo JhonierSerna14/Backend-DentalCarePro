@@ -1,43 +1,70 @@
 package com.example.demo.entity;
 
-import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+/**
+ * Entidad que representa un horario disponible en el consultorio.
+ */
 @Entity
+@Table(name = "horarios_disponibles")
 public class HorarioDisponible {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private Date fecha;
-    private String hora;
+    @Column(name = "fecha", nullable = false)
+    private LocalDate fecha;
+    
+    @Column(name = "hora", nullable = false)
+    private LocalTime hora;
 
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Date getFecha() {
-        return this.fecha;
-    }
-
-    public void setFecha(Date fecha) {
+    // Constructores
+    public HorarioDisponible() {}
+    
+    public HorarioDisponible(LocalDate fecha, LocalTime hora) {
         this.fecha = fecha;
-    }
-
-    public String getHora() {
-        return this.hora;
-    }
-
-    public void setHora(String hora) {
         this.hora = hora;
     }
 
+    // Getters y Setters
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public LocalDate getFecha() {
+        return this.fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+
+    public LocalTime getHora() {
+        return this.hora;
+    }
+
+    public void setHora(LocalTime hora) {
+        this.hora = hora;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HorarioDisponible)) return false;
+        HorarioDisponible that = (HorarioDisponible) o;
+        return fecha != null && fecha.equals(that.fecha) && 
+               hora != null && hora.equals(that.hora);
+    }
+    
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

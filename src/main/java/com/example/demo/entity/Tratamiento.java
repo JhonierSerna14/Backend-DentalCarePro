@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,13 +19,13 @@ import jakarta.persistence.OneToMany;
 public class Tratamiento {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
-	private Date fecha;
-	private String Tipo, Resultados, InstruccionesPostoperatorias;
+	private Long id;
+	private LocalDate fecha;
+	private String tipo, resultados, instruccionesPostoperatorias;
 	private LocalDate fechaModificacion;
 
 	@ManyToOne
-	@JoinColumn(name = "citaOdontologica_id")
+	@JoinColumn(name = "cita_odontologica_id")
 	@JsonManagedReference
 	private CitaOdontologica citaOdontologica;
 
@@ -51,44 +50,44 @@ public class Tratamiento {
 		this.citaOdontologica = citaOdontologica;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Date getFecha() {
+	public LocalDate getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
 	}
 
 	public String getTipo() {
-		return Tipo;
+		return tipo;
 	}
 
 	public void setTipo(String tipo) {
-		Tipo = tipo;
+		this.tipo = tipo;
 	}
 
 	public String getResultados() {
-		return Resultados;
+		return resultados;
 	}
 
 	public void setResultados(String resultados) {
-		Resultados = resultados;
+		this.resultados = resultados;
 	}
 
 	public String getInstruccionesPostoperatorias() {
-		return InstruccionesPostoperatorias;
+		return instruccionesPostoperatorias;
 	}
 
 	public void setInstruccionesPostoperatorias(String instruccionesPostoperatorias) {
-		InstruccionesPostoperatorias = instruccionesPostoperatorias;
+		this.instruccionesPostoperatorias = instruccionesPostoperatorias;
 	}
 
 	public LocalDate getFechaModificacion() {
