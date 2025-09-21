@@ -148,7 +148,7 @@ spring.datasource.password=tu_contraseña
 
 1. **Clonar el repositorio:**
 ```bash
-git clone https://github.com/tu-usuario/DentalCarePro.git
+git clone https://github.com/JhonierSerna14/Backend-DentalCarePro
 cd DentalCarePro
 ```
 
@@ -168,8 +168,6 @@ cd DentalCarePro
 ./gradlew test
 ```
 
-### Coverage
-El proyecto incluye tests unitarios para validar la funcionalidad principal de controladores y servicios.
 
 ## 📁 Estructura del Proyecto
 
@@ -217,130 +215,49 @@ src/
 - ✅ API REST completa
 - ✅ Frontend SPA integrado
 
-### Próximas Funcionalidades
-- 🔄 Notificaciones de citas
-- 🔄 Reportes y estadísticas
-- 🔄 Sistema de facturación
-- 🔄 Integración con servicios de correo
-
-## � Contribución
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.md) para detalles.
-
-## 📞 Contacto
-
-- **Desarrollador**: [Tu Nombre]
-- **Email**: [tu.email@ejemplo.com]
-- **Proyecto**: [https://github.com/tu-usuario/DentalCarePro](https://github.com/tu-usuario/DentalCarePro)
-
 ---
 
 ⚡ **Desarrollado con Spring Boot y ❤️**
-   - **Contraseña**: password (o configurar con `.\configure-password.ps1`)
 
-### 🏃 Ejecutar Aplicación
-```bash
-# Método 1: Script principal (recomendado)
+## ▶️ Quick start (Windows)
+
+1. Asegúrate que Java 17+ esté instalado. Puedes verificar con:
+
+```powershell
+java -version
+```
+
+2. Si Java está instalado pero Gradle no, usa el script helper incluido:
+
+```powershell
+# Inicia la aplicación (usa el wrapper incluido)
 .\run.ps1
-
-# Método 2: Script específico PostgreSQL
-.\run-postgres.ps1
-
-# Método 3: Gradle directo
-.\gradlew bootRun
 ```
 
-## 📋 Funcionalidades
+## ▶️ Quick start (WSL / Linux / macOS)
 
-### 👥 Gestión de Usuarios
-- **Pacientes**: Registro, perfil, historial médico
-- **Odontólogos**: Gestión de especialistas y consultorios
-
-### 📅 Sistema de Citas
-- Programación de citas odontológicas
-- Gestión de horarios disponibles
-- Vinculación paciente-odontólogo
-
-### 🏥 Gestión Clínica
-- **Consultorios**: Administración de espacios
-- **Tratamientos**: Registro de procedimientos
-- **Medicamentos**: Control de prescripciones
-- **Odontograma**: Sistema visual de estado dental
-
-### 🔐 Seguridad
-- Autenticación con Spring Security
-- Gestión de sesiones
-- Protección de endpoints
-
-## 🌐 Acceso
-- **Aplicación Web**: http://localhost:8080
-
-## 🛠️ Tecnologías
-- **Backend**: Spring Boot, Spring Security, Spring Data JPA
-- **Frontend**: React, HTML5, CSS3, JavaScript
-- **Base de Datos**: PostgreSQL
-- **Build**: Gradle
-- **ORM**: Hibernate
-
-## 📁 Estructura del Proyecto
-```
-src/
-├── main/
-│   ├── java/com/example/demo/
-│   │   ├── controller/     # Controladores REST
-│   │   ├── entity/         # Entidades JPA
-│   │   ├── repository/     # Repositorios de datos
-│   │   └── config/         # Configuración de seguridad
-│   └── resources/
-│       ├── static/         # Archivos estáticos (React build)
-│       └── application.properties
-└── test/                   # Pruebas unitarias
-```
-
-## 🔧 Comandos Útiles
 ```bash
-# Script principal
-.\run.ps1
-
-# Configurar PostgreSQL
-.\setup-postgres.ps1
-
-# Compilar proyecto
-.\gradlew compileJava
-
-# Ejecutar pruebas
-.\gradlew test
-
-# Limpiar proyecto
-.\gradlew clean
-
-# Ver estado de PostgreSQL (Docker)
-docker ps
-docker logs postgres-clinica
-
-# Detener PostgreSQL (Docker)
-docker stop postgres-clinica
-
-# Conectar a PostgreSQL
-psql -h localhost -U postgres -d clinicaBD
+# Ejecuta el helper para Unix-like
+./run.sh
 ```
 
-## �️ Configuración de Base de Datos
-La aplicación se conecta a PostgreSQL con la siguiente configuración por defecto:
-```properties
-Host: localhost
-Puerto: 5432
-Base de datos: clinicaBD
-Usuario: postgres
-Contraseña: password
+## 🔧 Persistir JAVA_HOME en Windows (opcional)
+
+Si quieres evitar tener que configurar `JAVA_HOME` en cada sesión, puedes establecerlo permanentemente (usuario o máquina):
+
+### Establecer para usuario (no requiere permisos de administrador)
+```powershell
+# Reemplaza la ruta con tu instalación real de JDK
+.\set-java-home.ps1 -Path "C:\\Program Files\\Java\\jdk-25" -Scope User
 ```
 
-Para usar una configuración diferente, modifica `src/main/resources/application.properties`.
+### Establecer para toda la máquina (requiere permisos de administrador)
+```powershell
+Start-Process powershell -Verb runAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File \"$PWD\\set-java-home.ps1\" -Path 'C:\\Program Files\\Java\\jdk-25' -Scope Machine"
+```
+
+Después de ejecutar, cierra y vuelve a abrir la terminal (o reinicia sesión) para que la variable sea visible en nuevas sesiones.
+
+## 📌 Notas
+- Si el helper detecta que `JAVA_HOME` no está configurado, intentará usar instalaciones comunes (p. ej. `C:\Program Files\Java\jdk-25`). Si no encuentra Java, mostrará instrucciones para instalarlo.
+- La documentación interactiva de la API está disponible en `http://localhost:8080/docs` una vez que la aplicación esté en ejecución.
