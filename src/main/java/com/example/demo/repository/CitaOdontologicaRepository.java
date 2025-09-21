@@ -6,7 +6,7 @@ import com.example.demo.entity.CitaOdontologica;
 import com.example.demo.entity.Odontologo;
 import com.example.demo.entity.Paciente;
 
-public interface CitaOdontologicaRepository extends CrudRepository<CitaOdontologica, Integer> {
+public interface CitaOdontologicaRepository extends CrudRepository<CitaOdontologica, Long> {
 	Iterable<CitaOdontologica> findByOdontologo(Odontologo odontologo);
 
 	Iterable<CitaOdontologica> findByPaciente(Paciente paciente);

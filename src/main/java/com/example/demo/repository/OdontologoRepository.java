@@ -4,7 +4,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.example.demo.entity.Odontologo;
 
-public interface OdontologoRepository extends CrudRepository<Odontologo, Integer> {
+public interface OdontologoRepository extends CrudRepository<Odontologo, Long> {
 	Iterable<Odontologo> findByNombres(String Nombres);
 
 	Odontologo findByEmail(String email);

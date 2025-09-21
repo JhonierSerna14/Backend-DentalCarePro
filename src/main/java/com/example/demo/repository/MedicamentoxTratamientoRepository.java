@@ -7,7 +7,7 @@ import com.example.demo.entity.Tratamiento;
 
 import java.util.List;
 
-public interface MedicamentoxTratamientoRepository extends CrudRepository<MedicamentoxTratamiento, Integer> {
+public interface MedicamentoxTratamientoRepository extends CrudRepository<MedicamentoxTratamiento, Long> {
 	List<MedicamentoxTratamiento> findByTratamiento(Tratamiento tratamiento);
 
 }
