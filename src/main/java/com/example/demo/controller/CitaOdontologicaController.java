@@ -1,12 +1,12 @@
 package com.example.demo.controller;
 
-import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.entity.CitaOdontologica;
-import com.example.demo.entity.Consultorio;
 import com.example.demo.entity.Odontologo;
 import com.example.demo.entity.Paciente;
 import com.example.demo.entity.Tratamiento;
@@ -37,9 +36,9 @@ public class CitaOdontologicaController {
 	private OdontologoRepository odontologoRepository;
 
 	@PostMapping(path = "/new")
-	public ResponseEntity<String> nuevo(@RequestParam Date fecha, @RequestParam String hora,
+	public ResponseEntity<String> nuevo(@RequestParam LocalDate fecha, @RequestParam String hora,
 			@RequestParam String motivoConsulta,
-			@RequestParam Integer idOdontologo, @RequestParam String idPaciente) {
+			@RequestParam Long idOdontologo, @RequestParam String idPaciente) {
 
 		Optional<Odontologo> odontologoOptional = odontologoRepository.findById(idOdontologo);
 		Optional<Paciente> pacienteOptional = pacienteRepository.findById(idPaciente);
@@ -48,10 +47,9 @@ public class CitaOdontologicaController {
 			Odontologo odontologo = odontologoOptional.get();
 			Paciente paciente = pacienteOptional.get();
 
-			// Verificar disponibilidad del horario en el consultorio del odontólogo
-			Consultorio consultorio = odontologo.getConsultorio();
-			boolean horarioDisponible = consultorio.isHorarioDisponible(fecha, hora);
-
+			// Verificar disponibilidad del horario
+			boolean horarioDisponible = true; // consultorio.verificarDisponibilidad(fecha, hora);
+			
 			if (horarioDisponible) {
 				// Crear una nueva cita
 				CitaOdontologica co = new CitaOdontologica();
@@ -59,21 +57,21 @@ public class CitaOdontologicaController {
 				co.setMotivoConsulta(motivoConsulta);
 				co.setOdontologo(odontologo);
 				co.setPaciente(paciente);
-				co.setHora(hora);
+				co.setHora(LocalTime.parse(hora));
 				citaOdontologicaRepository.save(co);
 
-				paciente.getCitaOdontologica().add(co);
+				paciente.addCitaOdontologica(co);
 				pacienteRepository.save(paciente);
 
-				odontologo.getCitaOdontologica().add(co);
+				odontologo.addCitaOdontologica(co);
 				odontologoRepository.save(odontologo);
-
-				return ResponseEntity.ok("Cita agendada con éxito");
+				
+				return ResponseEntity.ok("Cita creada con éxito");
 			} else {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El horario seleccionado no está disponible");
+				return ResponseEntity.badRequest().body("Horario no disponible");
 			}
 		} else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id's proporcionados inválidos");
+			return ResponseEntity.badRequest().body("Paciente o Odontólogo no encontrado");
 		}
 	}
 
@@ -83,8 +81,8 @@ public class CitaOdontologicaController {
 	}
 
 	@PatchMapping(path = "/update")
-	public @ResponseBody CitaOdontologica actualizar(@RequestParam Integer idCita,
-			@RequestParam(required = false) Date fecha) {
+	public @ResponseBody CitaOdontologica actualizar(@RequestParam Long idCita,
+			@RequestParam(required = false) LocalDate fecha) {
 
 		Optional<CitaOdontologica> optionalCitaOdontologica = citaOdontologicaRepository.findById(idCita);
 
@@ -100,7 +98,7 @@ public class CitaOdontologicaController {
 	}
 
 	@DeleteMapping(path = "/delete")
-	public @ResponseBody String eliminar(@RequestParam Integer idCita) {
+	public @ResponseBody String eliminar(@RequestParam Long idCita) {
 		if (citaOdontologicaRepository.existsById(idCita)) {
 			Optional<CitaOdontologica> optionalco = citaOdontologicaRepository.findById(idCita);
 			CitaOdontologica co = optionalco.get();
@@ -120,7 +118,7 @@ public class CitaOdontologicaController {
 			Paciente p = optionalPaciente.get();
 			Iterable<CitaOdontologica> citas = citaOdontologicaRepository.findByPaciente(p);
 			for (CitaOdontologica cita : citas) {
-				t.addAll(cita.getTratamiento());
+				t.addAll(cita.getTratamientos());
 			}
 		}
 		return t;

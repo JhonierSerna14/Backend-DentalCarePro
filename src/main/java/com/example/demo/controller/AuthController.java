@@ -87,9 +87,9 @@ public class AuthController {
         Paciente paciente = pacienteRepository.findByEmail(email);
         Odontologo odontologo = odontologoRepository.findByEmail(email);
         if (paciente != null) {
-            respuesta = paciente.getPregunta();
+            respuesta = paciente.getPreguntaSeguridad();
         } else if (odontologo != null) {
-            respuesta = odontologo.getPregunta();
+            respuesta = odontologo.getPreguntaSeguridad();
         }
         return respuesta;
     }
@@ -100,11 +100,11 @@ public class AuthController {
         Paciente paciente = pacienteRepository.findByEmail(email);
         Odontologo odontologo = odontologoRepository.findByEmail(email);
         if (paciente != null) {
-            if (paciente.getRespuesta().equalsIgnoreCase(respuestaSeguridad)) {
+            if (paciente.getRespuestaSeguridad().equalsIgnoreCase(respuestaSeguridad)) {
                 return ResponseEntity.ok("La clave de ingreso es: " + paciente.getPassword());
             }
         } else if (odontologo != null) {
-            if (odontologo.getRespuesta().equalsIgnoreCase(respuestaSeguridad)) {
+            if (odontologo.getRespuestaSeguridad().equalsIgnoreCase(respuestaSeguridad)) {
                 return ResponseEntity.ok("La clave de ingreso es: " + odontologo.getPassword());
             }
         }

@@ -1,11 +1,11 @@
 package com.example.demo.controller;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +31,7 @@ public class TratamientoController {
 
 	@PostMapping(path = "/new")
 	public @ResponseBody String nuevo(@RequestParam String Tipo, @RequestParam String Recomendaciones,
-			@RequestParam Date Fecha, @RequestParam Integer Idcita, @RequestParam String Resultados) {
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate Fecha, @RequestParam Long Idcita, @RequestParam String Resultados) {
 
 		Optional<CitaOdontologica> citaOdontologicaOptional = citaOdontologicaRepository.findById(Idcita);
 
@@ -49,7 +49,7 @@ public class TratamientoController {
 			t.setResultados(Resultados);
 			tratamientoRepository.save(t);
 
-			citaOdontologica.getTratamiento().add(t);
+			citaOdontologica.addTratamiento(t);
 			citaOdontologicaRepository.save(citaOdontologica);
 
 			return "Tratamiento creado";
@@ -65,11 +65,11 @@ public class TratamientoController {
 	}
 
 	@GetMapping(path = "/tratamientoEnCita")
-	public @ResponseBody Iterable<Tratamiento> listarEnCita(Integer citaId) {
+		public @ResponseBody List<Tratamiento> listarPorFecha(@RequestParam Long citaId) {
 		Optional<CitaOdontologica> citaOptional = citaOdontologicaRepository.findById(citaId);
 		if (citaOptional.isPresent()) {
 			CitaOdontologica c = citaOptional.get();
-			return c.getTratamiento();
+			return c.getTratamientos();
 		} else {
 			return List.of();
 		}
@@ -77,23 +77,23 @@ public class TratamientoController {
 	}
 
 	@DeleteMapping(path = "/delete")
-	public @ResponseBody String eliminar(@RequestParam int id) {
+	public @ResponseBody String eliminar(@RequestParam Long id) {
 		if (tratamientoRepository.existsById(id)) {
 			Optional<Tratamiento> t = tratamientoRepository.findById(id);
 			tratamientoRepository.deleteById(id);
-			int idCita = t.get().getCitaOdontologica().getId();
-			return Integer.toString(idCita);
+			Long idCita = t.get().getCitaOdontologica().getId();
+			return Long.toString(idCita);
 		} else {
 			return "El tratamiento con el ID proporcionado no existe";
 		}
 	}
 
 	@PostMapping(path = "/resultados")
-	public @ResponseBody String resultados(@RequestParam Integer idTratamiento, @RequestParam String Resultados) {
+	public @ResponseBody String resultados(@RequestParam Long idTratamiento, @RequestParam String resultados) {
 		Optional<Tratamiento> tratamientoOptional = tratamientoRepository.findById(idTratamiento);
 		if (tratamientoOptional.isPresent()) {
 			Tratamiento tratamiento = tratamientoOptional.get();
-			tratamiento.setResultados(Resultados);
+			tratamiento.setResultados(resultados);
 			return "Resultados agregados exitosamente";
 		}
 		return "Id de tratamiento inv�lido";

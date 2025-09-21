@@ -33,7 +33,7 @@ public class MedicamentoxTratamientoController {
 	private TratamientoRepository tratamientoRepository;
 
 	@PostMapping(path = "/new")
-	public @ResponseBody String nuevo(@RequestParam Integer idMedicamento, @RequestParam Integer idtratamiento,
+	public @ResponseBody String nuevo(@RequestParam Long idMedicamento, @RequestParam Long idtratamiento,
 			@RequestParam Integer cantidad, @RequestParam String horario) {
 
 		Optional<Medicamento> medicamentoOptional = medicamentoRepository.findById(idMedicamento);
@@ -65,7 +65,7 @@ public class MedicamentoxTratamientoController {
 
 	@GetMapping(path = "/medicamentosEnTratamiento")
 	public @ResponseBody Iterable<MedicamentoxTratamiento> medicamentosEnTratamiento(
-			@RequestParam Integer tratamientoId) {
+			@RequestParam Long tratamientoId) {
 		Optional<Tratamiento> tratamientoOptional = tratamientoRepository.findById(tratamientoId);
 		if (tratamientoOptional.isPresent()) {
 			Tratamiento t = tratamientoOptional.get();
@@ -75,12 +75,12 @@ public class MedicamentoxTratamientoController {
 	}
 
 	@DeleteMapping(path = "/delete")
-	public @ResponseBody String eliminar(@RequestParam Integer id) {
+	public @ResponseBody String eliminar(@RequestParam Long id) {
 		if (medicamentoxTratamientoRepository.existsById(id)) {
 			Optional<MedicamentoxTratamiento> t = medicamentoxTratamientoRepository.findById(id);
-			int idTratamiento = t.get().getTratamiento().getId();
+			Long idTratamiento = t.get().getTratamiento().getId();
 			medicamentoxTratamientoRepository.deleteById(id);
-			return Integer.toString(idTratamiento);
+			return Long.toString(idTratamiento);
 		} else {
 			return "El medicamentoxTratamiento con el ID proporcionado no existe";
 		}

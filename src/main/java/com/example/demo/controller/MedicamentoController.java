@@ -35,7 +35,7 @@ public class MedicamentoController {
 	}
 
 	@DeleteMapping(path = "/delete")
-	public @ResponseBody String eliminar(@RequestParam Integer id) {
+	public @ResponseBody String eliminar(@RequestParam Long id) {
 		if (medicamentoRepository.existsById(id)) {
 			medicamentoRepository.deleteById(id);
 			return "Medicamento eliminado exitosamente";

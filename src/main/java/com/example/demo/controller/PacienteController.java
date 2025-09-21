@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class PacienteController {
 	public @ResponseBody String nuevo(@RequestParam String Nombres, @RequestParam String Apellidos,
 			@RequestParam String Telefono, @RequestParam String Direccion, @RequestParam String Email,
 			@RequestParam String password,
-			@RequestParam String Cedula, @RequestParam Date FechaNacimiento, @RequestParam String alergias,
+			@RequestParam String Cedula, @RequestParam LocalDate FechaNacimiento, @RequestParam String alergias,
 			@RequestParam String condicionesMedicas, @RequestParam String pregunta, @RequestParam String respuesta) {
 
 		// Crear un nuevo paciente
@@ -50,8 +50,8 @@ public class PacienteController {
 		od.setPaciente(p);
 		od.crearOdontograma();
 		p.setOdontograma(od);
-		p.setPregunta(pregunta);
-		p.setRespuesta(respuesta);
+		p.setPreguntaSeguridad(pregunta);
+		p.setRespuestaSeguridad(respuesta);
 		pacienteRepository.save(p);
 		return "Creado con Éxito";
 	}

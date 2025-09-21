@@ -38,7 +38,7 @@ public class OdontologoController {
 	public @ResponseBody String nuevo(@RequestParam String nombres, @RequestParam String apellidos,
 			@RequestParam String especialidad, @RequestParam String telefono, @RequestParam String email,
 			@RequestParam String password,
-			@RequestParam Integer idConsultorio, @RequestParam String pregunta, @RequestParam String respuesta) {
+			@RequestParam Long idConsultorio, @RequestParam String pregunta, @RequestParam String respuesta) {
 		Optional<Consultorio> consultorioOptional = consultorioRepository.findById(idConsultorio);
 		if (consultorioOptional.isPresent()) {
 			Consultorio consultorio = consultorioOptional.get();
@@ -50,9 +50,8 @@ public class OdontologoController {
 			o.setEmail(email);
 			o.setPassword(password);
 			o.setConsultorio(consultorio);
-			o.setPregunta(pregunta);
-			o.setRespuesta(respuesta);
-
+			o.setPreguntaSeguridad(pregunta);
+			o.setRespuestaSeguridad(respuesta);
 			odontologoRepository.save(o);
 
 			consultorio.setOdontologo(o);
@@ -77,7 +76,7 @@ public class OdontologoController {
 	}
 
 	@DeleteMapping(path = "/delete")
-	public @ResponseBody String eliminar(@RequestParam int id) {
+	public @ResponseBody String eliminar(@RequestParam Long id) {
 		if (odontologoRepository.existsById(id)) {
 			Odontologo o = odontologoRepository.findById(id).get();
 			Iterable<CitaOdontologica> co = citaOdontologicaRepository.findByOdontologo(o);
@@ -95,7 +94,7 @@ public class OdontologoController {
 	}
 
 	@PatchMapping(path = "/update")
-	public @ResponseBody Odontologo actualizar(@RequestParam int id, @RequestParam(required = false) String nombres,
+	public @ResponseBody String actualizar(@RequestParam Long id, @RequestParam String nombres,
 			@RequestParam(required = false) String apellidos, @RequestParam(required = false) String especialidad,
 			@RequestParam(required = false) String telefono, @RequestParam(required = false) String email) {
 
@@ -104,26 +103,26 @@ public class OdontologoController {
 		if (optionalOdontologo.isPresent()) {
 			Odontologo o = optionalOdontologo.get();
 
-			if (nombres != null && nombres != "") {
+			if (nombres != null && !nombres.isEmpty()) {
 				o.setNombres(nombres);
 			}
-			if (apellidos != null && apellidos != "") {
+			if (apellidos != null && !apellidos.isEmpty()) {
 				o.setApellidos(apellidos);
 			}
-			if (especialidad != null && especialidad != "") {
+			if (especialidad != null && !especialidad.isEmpty()) {
 				o.setEspecialidad(especialidad);
 			}
-			if (telefono != null && telefono != "") {
+			if (telefono != null && !telefono.isEmpty()) {
 				o.setTelefono(telefono);
 			}
-			if (email != null && email != "") {
+			if (email != null && !email.isEmpty()) {
 				o.setEmail(email);
 			}
 
 			odontologoRepository.save(o);
-			return o;
+			return "Odontólogo actualizado con éxito";
 		} else {
-			return null;
+			return "Odontólogo no encontrado";
 		}
 	}
 

@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
-import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Calendar;
+import java.time.temporal.WeekFields;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,7 +41,7 @@ public class ConsultorioController {
 	}
 
 	@DeleteMapping(path = "/delete")
-	public @ResponseBody String eliminar(@RequestParam int id) {
+	public @ResponseBody String eliminar(@RequestParam Long id) {
 		if (consultorioRepository.existsById(id)) {
 			consultorioRepository.deleteById(id);
 			return "Consultorio eliminado exitosamente";
@@ -51,14 +51,14 @@ public class ConsultorioController {
 	}
 
 	@GetMapping(path = "/agendaConsultorio")
-	public @ResponseBody List<CitaOdontologica> getCitasPorFechaYConsultorio(@RequestParam int consultorioId,
-			@RequestParam Date fecha, @RequestParam(required = false) String filtro) {
+	public @ResponseBody List<CitaOdontologica> listarCitasPorFecha(@RequestParam Long idConsultorio,
+			@RequestParam LocalDate fecha, @RequestParam(required = false) String filtro) {
 
-		Consultorio consultorio = consultorioRepository.findById(consultorioId).orElse(null);
+		Consultorio consultorio = consultorioRepository.findById(idConsultorio).orElse(null);
 
 		if (consultorio != null) {
 			Odontologo odontologo = consultorio.getOdontologo();
-			List<CitaOdontologica> citas = odontologo.getCitaOdontologica();
+			List<CitaOdontologica> citas = odontologo.getCitasOdontologicas();
 
 			// Verificar si se proporciona un filtro
 			if (filtro != null && !filtro.isEmpty()) {
@@ -84,25 +84,18 @@ public class ConsultorioController {
 		}
 	}
 
-	// Metodo para verificar si dos fechas estan en el mismo mes
-	private boolean mismoMes(Date fecha1, Date fecha2) {
-		LocalDate localDate1 = fecha1.toLocalDate();
-		LocalDate localDate2 = fecha2.toLocalDate();
-		return localDate1.getMonth() == localDate2.getMonth() && localDate1.getYear() == localDate2.getYear();
+	// Método para verificar si dos fechas están en el mismo mes
+	private boolean mismoMes(LocalDate fecha1, LocalDate fecha2) {
+		return fecha1.getMonth() == fecha2.getMonth() && fecha1.getYear() == fecha2.getYear();
 	}
 
-	// Metodo para verificar si dos fechas estan en la misma semana
-	private boolean mismaSemana(Date fecha1, Date fecha2) {
-		Calendar cal1 = Calendar.getInstance();
-		cal1.setTime(fecha1);
-		int week1 = cal1.get(Calendar.WEEK_OF_YEAR);
-		int year1 = cal1.get(Calendar.YEAR);
-
-		Calendar cal2 = Calendar.getInstance();
-		cal2.setTime(fecha2);
-		int week2 = cal2.get(Calendar.WEEK_OF_YEAR);
-		int year2 = cal2.get(Calendar.YEAR);
-
+	// Método para verificar si dos fechas están en la misma semana
+	private boolean mismaSemana(LocalDate fecha1, LocalDate fecha2) {
+		WeekFields weekFields = WeekFields.of(Locale.getDefault());
+		int week1 = fecha1.get(weekFields.weekOfYear());
+		int year1 = fecha1.getYear();
+		int week2 = fecha2.get(weekFields.weekOfYear());
+		int year2 = fecha2.getYear();
 		return week1 == week2 && year1 == year2;
 	}
 
