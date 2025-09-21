@@ -238,102 +238,12 @@ GRANT ALL PRIVILEGES ON DATABASE DentalCarePro TO dentalcare_user;
 
 #### 3️⃣ Configurar Variables de Entorno
 ```bash
-# Linux/macOS
-export DB_URL=jdbc:postgresql://localhost:5432/DentalCarePro
-export DB_USERNAME=dentalcare_user
-export DB_PASSWORD=your_secure_password
-export SPRING_PROFILES_ACTIVE=dev
 
 # Windows PowerShell
 $env:DB_URL="jdbc:postgresql://localhost:5432/DentalCarePro"
 $env:DB_USERNAME="dentalcare_user"
 $env:DB_PASSWORD="your_secure_password"
 $env:SPRING_PROFILES_ACTIVE="dev"
-```
-
-#### 4️⃣ Ejecutar la Aplicación
-
-**🪟 Windows:**
-```powershell
-# Método recomendado (usa el script helper)
-.\run.ps1
-
-# O manualmente
-.\gradlew.bat bootRun
-```
-
-**🐧 Linux/macOS:**
-```bash
-# Método recomendado
-./run.sh
-
-# O manualmente
-./gradlew bootRun
-```
-
-#### 5️⃣ Verificar Instalación
-- **🌐 Aplicación**: `http://localhost:8080`
-- **📚 Documentación API**: `http://localhost:8080/docs`
-- **⚕️ Health Check**: `http://localhost:8080/actuator/health`
-
-### 🔧 Configuración Avanzada
-
-#### Personalizar Puerto y Contexto
-```properties
-# application.properties
-server.port=8080
-server.servlet.context-path=/api/v1
-springdoc.swagger-ui.path=/docs
-```
-
-#### Configurar CORS para Frontend
-```properties
-# application.properties
-cors.allowed-origins=http://localhost:3000,https://dentalcarepro.com
-cors.allowed-methods=GET,POST,PUT,DELETE,PATCH,OPTIONS
-```
-
-### 🔍 Scripts de Desarrollo
-
-#### Configurar JAVA_HOME (Windows)
-```powershell
-# Para usuario actual
-.\set-java-home.ps1 -Path "C:\Program Files\Java\jdk-17" -Scope User
-
-# Para toda la máquina (requiere admin)
-.\set-java-home.ps1 -Path "C:\Program Files\Java\jdk-17" -Scope Machine
-```
-
-## 🧪 Testing y Calidad
-
-### 🔬 Ejecutar Tests
-```bash
-# Ejecutar todos los tests
-./gradlew test
-
-# Ejecutar tests con reporte detallado
-./gradlew test --info
-
-# Ejecutar tests específicos
-./gradlew test --tests "PacienteControllerTest"
-```
-
-### 📊 Cobertura de Código
-```bash
-# Generar reporte de cobertura
-./gradlew jacocoTestReport
-
-# Ver reporte
-open build/reports/jacoco/test/html/index.html
-```
-
-### 🔍 Análisis de Código
-```bash
-# Verificar calidad del código
-./gradlew check
-
-# Generar reportes de análisis
-./gradlew spotbugsMain
 ```
 
 ## 📈 Monitoreo y Observabilidad
@@ -347,22 +257,6 @@ GET /actuator/info            # Información de la aplicación
 GET /actuator/metrics         # Métricas de rendimiento
 GET /actuator/env             # Variables de entorno (solo dev)
 ```
-
-### 🔍 Logs Estructurados
-```bash
-# Ver logs en tiempo real
-tail -f logs/spring.log
-
-# Filtrar logs por nivel
-grep "ERROR" logs/spring.log
-```
-
-### 📊 Métricas Personalizadas
-La aplicación registra métricas específicas:
-- Número de citas creadas por día
-- Tiempo de respuesta de APIs
-- Errores de autenticación
-- Uso de memoria y CPU
 
 ## 📁 Estructura del Proyecto
 
@@ -400,11 +294,12 @@ src/
 │       ├── application.properties                      # Configuración base
 │       ├── application-dev.properties                  # Perfil desarrollo
 │       ├── application-prod.properties                 # Perfil producción
-│       ├── static/                                     # Assets frontend
-│       │   ├── css/, js/, images/                      # Recursos estáticos
-│       │   ├── index.html                              # SPA principal
-│       │   └── manifest.json                           # PWA manifest
-│       └── templates/                                  # Plantillas (si es necesario)
+│       └── static/                                     # Frontend SPA (⚠️ Build artifacts excluded)
+│           ├── index.html                              # ✅ Template principal
+│           ├── favicon.ico                             # ✅ Favicon
+│           ├── robots.txt                              # ✅ SEO
+│           ├── logo*.png                               # ✅ Logos PWA
+│           └── static/                                 # ❌ Excluded: CSS/JS/Media builds
 ├── test/                                               # Tests automatizados
 │   └── java/com/example/demo/
 │       ├── controller/                                 # Tests de controladores
@@ -413,15 +308,27 @@ src/
 │       └── integration/                                # Tests de integración
 ├── docs/                                               # Documentación adicional
 │   ├── API_DOCS.md                                     # Guía de API
+│   ├── FRONTEND_BUILD.md                               # 📝 Proceso de build frontend
 │   ├── DATABASE_SCHEMA.md                              # Esquema de BD
 │   └── DEPLOYMENT.md                                   # Guía de despliegue
 ├── scripts/                                            # Scripts de desarrollo
 │   ├── run.ps1, run.sh                                 # Scripts de inicio
 │   └── set-java-home.ps1                               # Configuración Java
+├── .gitignore                                          # 🚫 Exclusiones (incl. frontend builds)
 ├── build.gradle                                        # Configuración Gradle
-├── gradlew, gradlew.bat                                # Gradle Wrapper
+├── gradlew                                             # Gradle Wrapper (Unix)
 └── README.md                                           # Este archivo
 ```
+
+### 📝 **Nota Importante sobre Frontend Build**
+
+Los archivos de build del frontend (CSS/JS minificados, source maps, asset manifest) han sido **excluidos del repositorio** siguiendo las mejores prácticas:
+
+- **❌ No incluidos**: `static/css/`, `static/js/`, `static/media/`, `asset-manifest.json`
+- **✅ Incluidos**: Archivos esenciales como `index.html`, `favicon.ico`, logos
+- **📋 Proceso**: Ver [FRONTEND_BUILD.md](FRONTEND_BUILD.md) para instrucciones de build
+
+**Beneficios**: Repositorio más limpio, sin conflictos de merge, builds determinísticos
 
 ## � Características Técnicas y Funcionalidades
 
@@ -472,95 +379,6 @@ src/
 - ✅ **Health checks** y métricas con Actuator
 - ✅ **Gradle wrapper** para builds consistentes
 - ✅ **Variables de entorno** para configuración
-
-### 🎯 **Próximas Mejoras**
-
-#### � **En Desarrollo**
-- [ ] Tests de integración automatizados
-- [ ] Cache con Redis para mejores tiempos de respuesta
-- [ ] Notificaciones por email para citas
-- [ ] Reportes PDF de historiales médicos
-
-#### 🚀 **Roadmap Futuro**
-- [ ] Autenticación OAuth2/JWT para mayor seguridad
-- [ ] API GraphQL para consultas flexibles
-- [ ] Integración con sistemas de facturación
-- [ ] App móvil con React Native
-- [ ] Dashboard analítico con métricas de clínica
-
-## 🌟 **Ventajas Competitivas**
-
-### 📈 **Comparación con Sistemas Tradicionales**
-
-| Característica | DentalCarePro | Sistemas Legacy | Ventaja |
-|---------------|---------------|-----------------|---------|
-| 📚 Documentación API | ✅ Swagger UI Interactivo | ❌ Documentación estática | **+300% productividad dev** |
-| 🔒 Seguridad | ✅ Multi-capa + Recovery | ⚠️ Básica | **+200% seguridad** |
-| 🦷 Odontograma | ✅ Automático por edad | ❌ Manual | **+500% eficiencia** |
-| 🌐 API REST | ✅ Moderna + OpenAPI | ❌ SOAP/Legacy | **+400% integrabilidad** |
-| ⚙️ Configuración | ✅ Perfiles + Variables | ❌ Hardcoded | **+100% flexibilidad** |
-| 📊 Monitoreo | ✅ Actuator + Métricas | ❌ Sin observabilidad | **+∞ visibilidad** |
-
-### 🏆 **Ventajas Técnicas**
-- **🚀 Spring Boot 3.2.2** - Framework más moderno y eficiente
-- **☕ Java 17** - Rendimiento superior y características modernas
-- **🐘 PostgreSQL** - Base de datos robusta para alta concurrencia
-- **📋 OpenAPI 3.0** - Estándar de industria para documentación
-- **🔒 Spring Security 6** - Seguridad enterprise-grade
-- **📊 Actuator** - Observabilidad y métricas en tiempo real
-
----
-
-## 🤝 **Contribución y Desarrollo**
-
-### 🛠️ **Para Desarrolladores**
-
-#### Configurar Entorno de Desarrollo
-```bash
-# Clonar y configurar
-git clone https://github.com/JhonierSerna14/Backend-DentalCarePro.git
-cd Backend-DentalCarePro
-
-# Configurar pre-commit hooks
-git config core.hooksPath .githooks
-
-# Instalar dependencias de desarrollo
-./gradlew build --refresh-dependencies
-```
-
-#### Guías de Contribución
-- 📋 **Issues**: Usa plantillas para bugs y features
-- 🌿 **Branches**: `feature/`, `bugfix/`, `hotfix/`
-- 🧪 **Tests**: Cobertura mínima 80%
-- 📝 **Commits**: Sigue [Conventional Commits](https://conventionalcommits.org/)
-- 🔍 **Code Review**: Obligatorio para main branch
-
-### 📞 **Soporte y Contacto**
-
-- 📧 **Email**: support@dentalcarepro.com
-- 🐛 **Issues**: [GitHub Issues](https://github.com/JhonierSerna14/Backend-DentalCarePro/issues)
-- � **Docs**: [API Documentation](http://localhost:8080/docs)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/JhonierSerna14/Backend-DentalCarePro/discussions)
-
----
-
-## 📄 **Licencia y Créditos**
-
-Este proyecto está licenciado bajo la **MIT License** - ver el archivo [LICENSE](LICENSE) para detalles.
-
-### 👥 **Desarrollado por**
-- **Jhonnier Serna** - [@JhonierSerna14](https://github.com/JhonierSerna14)
-- **Equipo DentalCarePro** - Contribuidores del proyecto
-
-### 🙏 **Agradecimientos**
-- **Spring Boot Team** - Por el excelente framework
-- **PostgreSQL Community** - Por la base de datos robusta
-- **SpringDoc Project** - Por la integración OpenAPI
-- **Comunidad Open Source** - Por las librerías utilizadas
-
----
-
-<div align="center">
 
 **⚡ Desarrollado con Spring Boot y ❤️**
 
